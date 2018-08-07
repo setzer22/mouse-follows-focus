@@ -11,6 +11,7 @@
 
 import Xlib
 import Xlib.display
+import time
 
 disp = Xlib.display.Display()
 root = disp.screen().root
@@ -49,6 +50,11 @@ if __name__ == '__main__':
     while True:
         win, changed = get_active_window()
         if changed:
+
+            # Sleep for a sensible amount of time before looking at window geometry. 
+            # This helps with scripts that re-dimension the window after creating it
+            time.sleep(0.150); # seconds
+
             mouseX, mouseY = get_mouse_pos(root)
             geo = get_window_geometry(root, win);
 
@@ -63,6 +69,8 @@ if __name__ == '__main__':
                     #print('Mouse is outside newly focused window')
                     midX = geo['x'] + geo['width'] // 2
                     midY = geo['y'] + geo['height'] // 2
+
+                    geo = get_window_geometry(root, win);
                     root.warp_pointer(midX, midY)
 
         while True:
